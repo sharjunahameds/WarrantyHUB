@@ -435,15 +435,15 @@ function handleRegistration() {
       })
       .then(res => res.json())
       .then(data => {
-        if (data.message === "Registered Successfully") {
-          showToast('Registration successful! Redirecting to Login...', 'success');
-          setTimeout(() => {
-            window.location.href = 'login.html';
-          }, 1500);
-        } else {
-          showToast(data.message || 'Registration failed', 'danger');
-        }
-      })
+  if (data.success) {
+    showToast('Registration successful! Redirecting to Login...', 'success');
+    setTimeout(() => {
+      window.location.href = 'login.html';
+    }, 1500);
+  } else {
+    showToast(data.message || 'Registration failed', 'danger');
+  }
+})
       .catch(err => {
         console.error(err);
         showToast('Server connection error', 'danger');
@@ -491,7 +491,7 @@ function handleLogin() {
       })
       .then(res => res.json())
       .then(data => {
-        if (data.token) {
+        if (data.token && data.user) { {
           localStorage.setItem("token", data.token);
           const user = {
             id: data.user.id,
@@ -509,7 +509,7 @@ function handleLogin() {
         }
       })
       .catch(err => {
-        console.error(err);
+        console.error("REGISTER ERROR:", err);
         showToast('Server connection error', 'danger');
       });
     }

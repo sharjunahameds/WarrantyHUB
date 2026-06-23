@@ -42,18 +42,22 @@ app.post("/register", (req, res) => {
     const check = "SELECT * FROM users WHERE email = ?";
 
     db.query(check, [email], (err, result) => {
-        if (err) return res.json(err);
+        if (err) {
+            return res.status(500).json({ success: false, message: "DB Error" });
+        }
 
         if (result.length > 0) {
-            return res.json({ message: "User already exists" });
+            return res.status(409).json({ success: false, message: "User already exists" });
         }
 
         const insert = "INSERT INTO users (name, email, password) VALUES (?, ?, ?)";
 
-        db.query(insert, [name, email, password], (err2, result2) => {
-            if (err2) return res.json(err2);
+        db.query(insert, [name, email, password], (err2) => {
+            if (err2) {
+                return res.status(500).json({ success: false, message: "Insert failed" });
+            }
 
-            res.json({ message: "Registered Successfully" });
+            return res.status(201).json({ success: true, message: "Registered Successfully" });
         });
     });
 });
