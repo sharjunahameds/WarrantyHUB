@@ -4,7 +4,7 @@
  */
 
 // --- GLOBAL CONSTANTS & DEFAULTS ---
-const API_URL = "http://localhost:5000";
+const API_URL = "https://warrantyhub-zngy.onrender.com";
 let token = localStorage.getItem("token");
 
 const USER_KEY = 'warrantyhub_user';
