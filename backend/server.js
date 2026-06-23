@@ -71,7 +71,10 @@ app.post("/login", (req, res) => {
     const query = "SELECT * FROM users WHERE email = ? AND password = ?";
 
     db.query(query, [email, password], (err, result) => {
-        if (err) return res.json(err);
+        if (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Database error" });
+}
 
         if (result.length === 0) {
             return res.json({ message: "Invalid Credentials" });
@@ -85,11 +88,12 @@ app.post("/login", (req, res) => {
             { expiresIn: "1d" }
         );
 
-        res.json({
-            message: "Login Success",
-            token,
-            user
-        });
+res.json({
+    success: true,
+    message: "Login Success",
+    token,
+    user
+});
     });
 });
 
