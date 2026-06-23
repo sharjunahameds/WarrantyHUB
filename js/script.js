@@ -443,7 +443,7 @@ function handleLogin() {
 
       const data = await res.json();
 
-      if (data.token) {
+      if (data.success) {
         localStorage.setItem("token", data.token);
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
 
