@@ -209,9 +209,9 @@ app.get("/products", verifyToken, (req, res) => {
 // =====================
 // SERVER START
 // =====================
-const PORT = process.env.PORT || 5000;
+
 app.get("/", (req, res) => {
-    res.send("WarrantyHUB Backend is Live 🚀");
+    res.send("WarrantyHUB Backend is Live ");
 });
 const PORT = process.env.PORT || 5000;
 
