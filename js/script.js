@@ -35,6 +35,13 @@ function initStorage() {
 initStorage();
 
 // --- DATE CALCULATIONS HELPERS ---
+
+/**
+ * Calculates the expiry date based on purchase date and duration.
+ * @param {string} purchaseDateStr - Format YYYY-MM-DD
+ * @param {number} durationMonths 
+ * @returns {Date}
+ */
 function calculateExpiryDate(purchaseDateStr, durationMonths) {
   const purchaseDate = new Date(purchaseDateStr);
   if (isNaN(purchaseDate.getTime())) return null;
@@ -44,6 +51,11 @@ function calculateExpiryDate(purchaseDateStr, durationMonths) {
   return expiryDate;
 }
 
+/**
+ * Returns details about warranty status and remaining time.
+ * @param {string} purchaseDateStr 
+ * @param {number} durationMonths 
+ */
 function getWarrantyStatusInfo(purchaseDateStr, durationMonths) {
   const expiryDate = calculateExpiryDate(purchaseDateStr, durationMonths);
   if (!expiryDate) {
@@ -51,6 +63,7 @@ function getWarrantyStatusInfo(purchaseDateStr, durationMonths) {
   }
 
   const today = new Date();
+  // Clear time components for pure day comparison
   today.setHours(0, 0, 0, 0);
   const expiryDateMidnight = new Date(expiryDate);
   expiryDateMidnight.setHours(0, 0, 0, 0);
@@ -84,6 +97,7 @@ function getWarrantyStatusInfo(purchaseDateStr, durationMonths) {
 }
 
 // --- AUTHENTICATION & ROUTING ---
+
 function getLoggedInUser() {
   return JSON.parse(localStorage.getItem(USER_KEY));
 }
@@ -93,12 +107,14 @@ function checkAuthentication() {
   const path = window.location.pathname;
   const page = path.substring(path.lastIndexOf('/') + 1);
 
+  // Private routes
   const privatePages = ['dashboard.html', 'products.html', 'profile.html'];
   
   if (privatePages.includes(page) && !user) {
     window.location.href = 'login.html';
   }
 
+  // Public authentication routes (prevent re-entering if logged in)
   if ((page === 'login.html' || page === 'register.html') && user) {
     window.location.href = 'dashboard.html';
   }
@@ -110,6 +126,7 @@ function logout() {
   window.location.href = 'index.html';
 }
 
+// Render dynamic user menu in Header
 function renderHeaderUserMenu() {
   const user = getLoggedInUser();
   const navActions = document.getElementById('nav-actions');
@@ -127,6 +144,7 @@ function renderHeaderUserMenu() {
       </div>
     `;
 
+    // Dropdown trigger or navigation list enhancements
     const userMenuTrigger = document.getElementById('user-menu-trigger');
     if (userMenuTrigger) {
       userMenuTrigger.addEventListener('click', () => {
@@ -134,6 +152,7 @@ function renderHeaderUserMenu() {
       });
     }
 
+    // Insert Logged in links in nav-links if they aren't already there
     if (navLinks && !navLinks.querySelector('[data-private]')) {
       navLinks.innerHTML = `
         <li><a href="dashboard.html" class="${isActivePage('dashboard.html')}" data-private>Dashboard</a></li>
@@ -148,6 +167,7 @@ function renderHeaderUserMenu() {
       });
     }
   } else {
+    // Guest layout
     navActions.innerHTML = `
       <a href="login.html" class="btn btn-secondary">Sign In</a>
       <a href="register.html" class="btn btn-primary">Get Started</a>
@@ -167,6 +187,7 @@ function isActivePage(pageName) {
   return path.endsWith(pageName) ? 'active' : '';
 }
 
+// Hamburger menu toggle for mobile
 function initMobileNavigation() {
   const toggle = document.querySelector('.mobile-toggle');
   const navLinks = document.querySelector('.nav-links');
@@ -206,10 +227,12 @@ function showToast(message, type = 'success') {
 
   container.appendChild(toast);
   
+  // Trigger animation frame for transition
   requestAnimationFrame(() => {
     toast.classList.add('active');
   });
 
+  // Remove toast after duration
   setTimeout(() => {
     toast.classList.remove('active');
     setTimeout(() => {
@@ -219,6 +242,7 @@ function showToast(message, type = 'success') {
 }
 
 // --- DATA LOGIC: PRODUCTS MANAGEMENT ---
+
 let cachedProducts = [];
 
 async function loadProductsFromServer() {
@@ -229,7 +253,9 @@ async function loadProductsFromServer() {
   }
   try {
     const res = await fetch(`${API_URL}/products`, {
-      headers: { "authorization": token }
+      headers: {
+        "authorization": token
+      }
     });
     const data = await res.json();
     if (data && (data.message === "No token provided" || data.message === "Invalid token")) {
@@ -261,6 +287,10 @@ function getProducts() {
   return cachedProducts;
 }
 
+function saveProducts(products) {
+  // No-op since we use backend database
+}
+
 async function addProduct(product) {
   const token = localStorage.getItem("token");
   if (!token) return null;
@@ -286,7 +316,8 @@ async function addProduct(product) {
         notes: product.notes
       })
     });
-    return await res.json();
+    const data = await res.json();
+    return data;
   } catch (err) {
     console.error("Error adding product:", err);
     return null;
@@ -333,7 +364,9 @@ async function deleteProduct(id) {
   try {
     const res = await fetch(`${API_URL}/delete-product/${id}`, {
       method: "DELETE",
-      headers: { "authorization": token }
+      headers: {
+        "authorization": token
+      }
     });
     await res.json();
     return true;
@@ -344,12 +377,14 @@ async function deleteProduct(id) {
 }
 
 // --- PAGE: USER AUTHENTICATION LOGIC ---
+
 function handleRegistration() {
   const form = document.querySelector('#register-form');
   if (!form) return;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const name = document.querySelector('#fullname');
     const email = document.querySelector('#email');
@@ -370,17 +405,19 @@ function handleRegistration() {
 
       if (data.success || data.message === "Registered Successfully") {
         showToast("Registered successfully", "success");
+
         setTimeout(() => {
           window.location.href = "login.html";
         }, 800);
       } else {
         showToast(data.message || "Registration failed", "danger");
       }
+
     } catch (err) {
       console.error(err);
       showToast("Server error", "danger");
     }
-  });
+  }, true);
 }
 
 function handleLogin() {
@@ -389,6 +426,7 @@ function handleLogin() {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    e.stopPropagation();
 
     const email = document.querySelector('#email');
     const password = document.querySelector('#password');
@@ -410,17 +448,19 @@ function handleLogin() {
         localStorage.setItem(USER_KEY, JSON.stringify(data.user));
 
         showToast("Login successful", "success");
+
         setTimeout(() => {
           window.location.href = "dashboard.html";
         }, 800);
       } else {
         showToast(data.message || "Login failed", "danger");
       }
+
     } catch (err) {
       console.error(err);
       showToast("Server error", "danger");
     }
-  });
+  }, true);
 }
 
 function showInputError(input, message) {
@@ -446,6 +486,7 @@ function validateEmailFormat(email) {
 }
 
 // --- PAGE: DASHBOARD LOGIC ---
+
 function initDashboard() {
   const totalCards = document.getElementById('stat-total');
   const activeCards = document.getElementById('stat-active');
@@ -453,7 +494,7 @@ function initDashboard() {
   const expiredCards = document.getElementById('stat-expired');
   const recentProductsList = document.getElementById('recent-products-list');
 
-  if (!totalCards) return;
+  if (!totalCards) return; // Not on dashboard page
 
   const products = getProducts();
   let activeCount = 0;
@@ -467,11 +508,13 @@ function initDashboard() {
     else if (status === 'Expired') expiredCount++;
   });
 
+  // Animate/Set counts
   totalCards.textContent = products.length;
   activeCards.textContent = activeCount;
   expiringCards.textContent = expiringCount;
   expiredCards.textContent = expiredCount;
 
+  // Render recent 3 products
   if (recentProductsList) {
     if (products.length === 0) {
       recentProductsList.innerHTML = `
@@ -500,6 +543,8 @@ function initDashboard() {
           countdownText = `Expired`;
           countdownClass = 'expired';
         }
+
+        const priceFormatted = parseFloat(p.price) ? `$${parseFloat(p.price).toFixed(2)}` : 'N/A';
 
         const card = document.createElement('div');
         card.className = 'glass-card product-card';
@@ -530,19 +575,23 @@ function initDashboard() {
 }
 
 // --- PAGE: PRODUCTS LISTING & CRUD LOGIC ---
+
 let currentFilter = 'All';
 let currentSearch = '';
 
 function initProductsPage() {
   const productsGrid = document.getElementById('products-grid');
-  if (!productsGrid) return;
+  if (!productsGrid) return; // Not on products page
 
+  // Check URL params to open form automatically (Redirect from Dashboard Quick Actions)
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('action') === 'add') {
+    // Clear URL parameters so reloading doesn't re-trigger
     window.history.replaceState({}, document.title, window.location.pathname);
     openProductModal();
   }
 
+  // Setup Form Live Expiry Calculation
   const purchaseDateInput = document.getElementById('prod-purchase-date');
   const durationInput = document.getElementById('prod-duration');
   
@@ -566,10 +615,12 @@ function initProductsPage() {
     durationInput.addEventListener('input', updatePreview);
   }
 
+  // Set default purchase date to today
   if (purchaseDateInput && !purchaseDateInput.value) {
     purchaseDateInput.value = new Date().toISOString().split('T')[0];
   }
 
+  // Wire up Search Box
   const searchBox = document.getElementById('search-box');
   if (searchBox) {
     searchBox.addEventListener('keyup', (e) => {
@@ -578,6 +629,7 @@ function initProductsPage() {
     });
   }
 
+  // Wire up Filter Tabs
   const filterTabs = document.querySelectorAll('.filter-tab');
   filterTabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -588,11 +640,13 @@ function initProductsPage() {
     });
   });
 
+  // Wire up Add Form submit
   const form = document.getElementById('product-form');
   if (form) {
     form.addEventListener('submit', handleProductFormSubmit);
   }
 
+  // Render initial list
   renderProductsGrid();
 }
 
@@ -605,6 +659,7 @@ function openProductModal(editingProduct = null) {
 
   if (!modal || !form) return;
 
+  // Clear errors
   form.querySelectorAll('.input-control').forEach(input => clearInputError(input));
 
   if (editingProduct) {
@@ -618,6 +673,7 @@ function openProductModal(editingProduct = null) {
     document.getElementById('prod-price').value = editingProduct.price || '';
     document.getElementById('prod-notes').value = editingProduct.notes || '';
     
+    // Trigger expiry preview calculate
     const info = getWarrantyStatusInfo(editingProduct.purchaseDate, editingProduct.duration);
     if (info && info.expiryDate) {
       previewDiv.innerHTML = `Expiry Date: <span class="val">${info.formattedExpiry}</span> (${info.daysLeft < 0 ? 'Expired' : info.daysLeft + ' days left'})`;
@@ -724,11 +780,15 @@ function renderProductsGrid() {
 
   const products = getProducts();
   
+  // Filter products
   const filtered = products.filter(p => {
+    // Search match
     const searchMatch = p.name.toLowerCase().includes(currentSearch) || 
                         p.brand.toLowerCase().includes(currentSearch);
     
     if (!searchMatch) return false;
+
+    // Category status filter
     if (currentFilter === 'All') return true;
     
     const { status } = getWarrantyStatusInfo(p.purchaseDate, p.duration);
@@ -823,6 +883,7 @@ function renderProductsGrid() {
   });
 }
 
+// Global hook handlers for inline buttons in generated cards
 window.editProductAction = function(id) {
   const products = getProducts();
   const prod = products.find(p => p.id == id);
@@ -845,15 +906,18 @@ window.deleteProductAction = async function(id) {
 };
 
 // --- PAGE: PROFILE & SETTINGS ---
+
 function initProfilePage() {
   const emailSettingsForm = document.getElementById('email-settings-form');
   const profileDetailsForm = document.getElementById('profile-details-form');
   
-  if (!emailSettingsForm && !profileDetailsForm) return;
+  if (!emailSettingsForm && !profileDetailsForm) return; // Not on profile settings page
 
+  // Load and show user info
   const user = getLoggedInUser() || DEFAULT_USER;
   const initials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
 
+  // Set Profile Left Card Info
   const userDispName = document.getElementById('user-display-name');
   const userDispEmail = document.getElementById('user-display-email');
   const userDispJoined = document.getElementById('user-display-joined');
@@ -864,12 +928,14 @@ function initProfilePage() {
   if (userDispJoined) userDispJoined.textContent = new Date(user.joinedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   if (userDispAvatar) userDispAvatar.textContent = initials;
 
+  // Populate Edit Fields
   const editNameInput = document.getElementById('profile-name');
   const editEmailInput = document.getElementById('profile-email');
   
   if (editNameInput) editNameInput.value = user.name;
   if (editEmailInput) editEmailInput.value = user.email;
 
+    // Handle Details Form Submit
   if (profileDetailsForm) {
     profileDetailsForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -913,6 +979,7 @@ function initProfilePage() {
             };
             localStorage.setItem(USER_KEY, JSON.stringify(updatedUser));
             
+            // Update header navbar menu & profile page elements
             renderHeaderUserMenu();
             if (userDispName) userDispName.textContent = updatedUser.name;
             if (userDispEmail) userDispEmail.textContent = updatedUser.email;
@@ -933,6 +1000,7 @@ function initProfilePage() {
     });
   }
 
+  // Load and populate Settings
   const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY)) || DEFAULT_SETTINGS;
   const toggleReminders = document.getElementById('enable-reminders');
   const check7 = document.getElementById('reminder-7');
@@ -945,6 +1013,7 @@ function initProfilePage() {
     check15.checked = settings.reminder15;
     check30.checked = settings.reminder30;
 
+    // Toggle disable status of checkboxes based on master toggle
     const toggleSubCheckboxState = () => {
       const checked = toggleReminders.checked;
       check7.disabled = !checked;
@@ -986,18 +1055,23 @@ function escapeHtml(text) {
 
 // --- LIFECYCLE MANAGEMENT ---
 document.addEventListener('DOMContentLoaded', async () => {
+  // Check auth first to redirect unauthorized users
   checkAuthentication();
+
+  // Load products from server before executing page-specific logic
   await loadProductsFromServer();
 
   renderHeaderUserMenu();
   initMobileNavigation();
 
+  // Initialize Page-Specific Elements
   initDashboard();
   initProductsPage();
   initProfilePage();
   handleRegistration();
   handleLogin();
 
+  // Wire up Global Add Product triggers on products page
   const addTrigger = document.getElementById('btn-add-product-modal-trigger');
   if (addTrigger) {
     addTrigger.addEventListener('click', () => openProductModal());
@@ -1007,4 +1081,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (cancelTrigger) {
     cancelTrigger.addEventListener('click', () => closeProductModal());
   }
-});
+});  
