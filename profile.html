@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Settings | WarrantyHUB</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Style CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Glowing Background Accents -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="dashboard.html" class="logo-wrapper">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>WarrantyHUB</span>
+      </a>
+      
+      <nav>
+        <ul class="nav-links" id="nav-links">
+          <!-- Injected via script.js -->
+        </ul>
+      </nav>
+
+      <div class="nav-actions" id="nav-actions">
+        <!-- Injected via script.js -->
+      </div>
+
+      <div class="mobile-toggle" id="mobile-toggle-btn">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- PROFILE MAIN CONTENT -->
+  <main class="dashboard-wrapper">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <div class="dashboard-header">
+        <div>
+          <h1>Account Settings</h1>
+          <p>Manage your profile details and automated email notification options.</p>
+        </div>
+      </div>
+
+      <!-- Settings Layout Grid -->
+      <div class="profile-grid">
+        
+        <!-- Left Side: Profile Preview Card -->
+        <div class="glass-card profile-card-left">
+          <div class="profile-avatar-large" id="user-display-avatar">AM</div>
+          <h3 id="user-display-name">Alex Mercer</h3>
+          <span class="email" id="user-display-email">alex.mercer@warrantyhub.io</span>
+          
+          <div class="profile-meta-info">
+            <div>
+              <span class="lbl">Member Since</span>
+              <span class="val" id="user-display-joined">Jan 15, 2026</span>
+            </div>
+            <div>
+              <span class="lbl">Account Level</span>
+              <span class="val" style="color: var(--primary); font-weight: 700;">PRO SaaS</span>
+            </div>
+            <div>
+              <span class="lbl">Server Status</span>
+              <span class="val" style="color: var(--color-success)">Synced</span>
+            </div>
+          </div>
+
+          <button id="btn-reset-app-data" class="btn btn-outline" style="margin-top: 2rem; width: 100%; border-color: rgba(239,68,68,0.3); color: var(--color-danger);">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Reset Demo Data</span>
+          </button>
+        </div>
+
+        <!-- Right Side: Edit Forms -->
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          
+          <!-- Profile Details Section -->
+          <section class="glass-card">
+            <div class="panel-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 1rem;">
+              <h3>Edit Profile Details</h3>
+            </div>
+            <div class="panel-body">
+              <form id="profile-details-form" novalidate>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="profile-name">Full Name</label>
+                    <div class="input-wrapper">
+                      <i class="fa-regular fa-user"></i>
+                      <input type="text" id="profile-name" class="input-control" required>
+                      <div class="form-helper">Name is required</div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="profile-email">Email Address</label>
+                    <div class="input-wrapper">
+                      <i class="fa-regular fa-envelope"></i>
+                      <input type="email" id="profile-email" class="input-control" required>
+                      <div class="form-helper">Enter a valid email</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    <span>Save Changes</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- Email Alerts Settings Section -->
+          <section class="glass-card">
+            <div class="panel-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 1rem;">
+              <h3>Email Notification Settings</h3>
+            </div>
+            <div class="panel-body">
+              <form id="email-settings-form" novalidate>
+                
+                <!-- Master Alert Switch -->
+                <div class="switch-wrapper" style="margin-bottom: 1rem; padding-bottom: 1.25rem;">
+                  <div class="switch-label-desc">
+                    <span>Warranty Reminders</span>
+                    <p>Receive notifications regarding expiring items.</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="enable-reminders">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <!-- Sub-options checkboxes -->
+                <div style="display: flex; flex-direction: column; gap: 0.5rem; padding-left: 0.5rem;">
+                  <div class="switch-wrapper" style="border: none; padding: 0.5rem 0;">
+                    <div class="switch-label-desc">
+                      <span>7 Days Before Expiry</span>
+                      <p>Send an alert exactly one week before coverage ends.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="reminder-7">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="switch-wrapper" style="border: none; padding: 0.5rem 0;">
+                    <div class="switch-label-desc">
+                      <span>15 Days Before Expiry</span>
+                      <p>Send an alert about two weeks before coverage ends.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="reminder-15">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="switch-wrapper" style="border: none; padding: 0.5rem 0;">
+                    <div class="switch-label-desc">
+                      <span>30 Days Before Expiry</span>
+                      <p>Send an alert one month before coverage ends.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="reminder-30">
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1rem;">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-bell-concierge"></i>
+                    <span>Save Alert Settings</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span style="font-weight: 700; color: var(--text-primary);">WarrantyHUB</span>
+        <span>WarrantyHUB - Smart Warranty Tracking System</span>
+      </div>
+      <div class="footer-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="products.html">Products</a>
+        <a href="profile.html">Settings</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script JS -->
+  <script src="js/script.js"></script>
+  
+  <!-- Hook Reset Data Trigger -->
+  <script>
+    document.getElementById('btn-reset-app-data').addEventListener('click', () => {
+      if (confirm('Are you sure you want to reset all products and profile settings to defaults? This will reload the page.')) {
+        localStorage.clear();
+        showToast('App data cleared. Resetting...', 'warning');
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>

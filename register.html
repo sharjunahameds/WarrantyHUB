@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up | WarrantyHUB</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html" class="logo-wrapper">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>WarrantyHUB</span>
+      </a>
+      <nav>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html#features">Features</a></li>
+          <li><a href="index.html#how-it-works">How It Works</a></li>
+          <li><a href="index.html#testimonials">Reviews</a></li>
+        </ul>
+      </nav>
+      <div class="nav-actions" id="nav-actions">
+        <a href="login.html" class="btn btn-secondary">Sign In</a>
+        <a href="register.html" class="btn btn-primary active">Get Started</a>
+      </div>
+      <div class="mobile-toggle">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- AUTH PAGE -->
+  <main class="auth-wrapper">
+    <div class="glass-card auth-card">
+      <div class="auth-header">
+        <h2>Create Account</h2>
+        <p>Get started with WarrantyHUB for free today</p>
+      </div>
+
+      <form id="register-form" novalidate>
+        <div class="form-group">
+          <label for="fullname">Full Name</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-user"></i>
+            <input type="text" id="fullname" class="input-control" placeholder="Alex Mercer" required>
+            <div class="form-helper">Full name is required</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope"></i>
+            <input type="email" id="email" class="input-control" placeholder="alex@company.com" required>
+            <div class="form-helper">Enter a valid email address</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="password" class="input-control" placeholder="••••••••" required>
+            <div class="form-helper">Password must be at least 6 characters</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-shield-halved"></i>
+            <input type="password" id="confirm-password" class="input-control" placeholder="••••••••" required>
+            <div class="form-helper">Passwords do not match</div>
+          </div>
+        </div>
+
+        <div class="auth-actions">
+          <button type="submit" class="btn btn-primary">
+            <span>Register Account</span>
+            <i class="fa-solid fa-user-plus"></i>
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer">
+        <span>Already have an account? </span>
+        <a href="login.html">Log In</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span style="font-weight: 700; color: var(--text-primary);">WarrantyHUB</span>
+        <span>WarrantyHUB - Smart Warranty Tracking System</span>
+      </div>
+      <div class="footer-links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Warranties | WarrantyHUB</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Style CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Glowing Background Accents -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="dashboard.html" class="logo-wrapper">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>WarrantyHUB</span>
+      </a>
+      
+      <nav>
+        <ul class="nav-links" id="nav-links">
+          <!-- Injected via script.js -->
+        </ul>
+      </nav>
+
+      <div class="nav-actions" id="nav-actions">
+        <!-- Injected via script.js -->
+      </div>
+
+      <div class="mobile-toggle" id="mobile-toggle-btn">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- PRODUCTS PAGE MAIN CONTENT -->
+  <main class="dashboard-wrapper">
+    <div class="container">
+      
+      <!-- Page Header -->
+      <div class="dashboard-header">
+        <div>
+          <h1>My Tracked Products</h1>
+          <p>Search, filter, and manage your hardware warranty coverages.</p>
+        </div>
+        <div>
+          <button id="btn-add-product-modal-trigger" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add Product</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search & Filters Toolbar -->
+      <div class="controls-bar">
+        <div class="search-wrapper">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="search-box" class="search-control" placeholder="Search by name, brand...">
+        </div>
+
+        <div class="filter-tabs">
+          <div class="filter-tab active" data-filter="All">All Products</div>
+          <div class="filter-tab" data-filter="Active">Active</div>
+          <div class="filter-tab" data-filter="Expiring Soon">Expiring Soon</div>
+          <div class="filter-tab" data-filter="Expired">Expired</div>
+        </div>
+      </div>
+
+      <!-- Products Cards Grid -->
+      <div class="products-grid" id="products-grid">
+        <!-- Cards will be dynamically injected here by script.js -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ADD / EDIT PRODUCT MODAL -->
+  <div class="modal" id="product-modal">
+    <div class="glass-card modal-content">
+      
+      <div class="modal-header">
+        <h3 id="modal-title">Add Product</h3>
+        <button class="btn-close-modal" id="btn-cancel-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form id="product-form" novalidate>
+          <input type="hidden" id="prod-edit-id">
+
+          <div class="form-group">
+            <label for="prod-name">Product Name *</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-tag" style="left: 1rem;"></i>
+              <input type="text" id="prod-name" class="input-control" placeholder="e.g. HP Victus 16 Laptop" required>
+              <div class="form-helper">Product name is required</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prod-brand">Brand *</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-copyright" style="left: 1rem;"></i>
+                <input type="text" id="prod-brand" class="input-control" placeholder="e.g. HP" required>
+                <div class="form-helper">Brand is required</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="prod-category">Category</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-list" style="left: 1rem;"></i>
+                <select id="prod-category" class="input-control" style="appearance: none; cursor: pointer; padding-right: 2rem;">
+                  <option value="Electronics">Electronics</option>
+                  <option value="Appliances">Appliances</option>
+                  <option value="Audio">Audio</option>
+                  <option value="Others">Others</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" style="left: auto; right: 1rem; font-size: 0.8rem; pointer-events: none;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="prod-purchase-date">Purchase Date *</label>
+              <div class="input-wrapper">
+                <i class="fa-regular fa-calendar-days" style="left: 1rem;"></i>
+                <input type="date" id="prod-purchase-date" class="input-control" required>
+                <div class="form-helper">Purchase date is required</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="prod-duration">Warranty (Months) *</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-business-time" style="left: 1rem;"></i>
+                <input type="number" id="prod-duration" class="input-control" min="1" placeholder="e.g. 12" required>
+                <div class="form-helper">Warranty duration must be > 0</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="prod-price">Price Paid ($)</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-dollar-sign" style="left: 1rem;"></i>
+              <input type="number" id="prod-price" class="input-control" min="0" step="0.01" placeholder="e.g. 999.99">
+              <div class="form-helper">Price must be positive</div>
+            </div>
+          </div>
+
+          <!-- Dynamic Expiry Calculation Banner Preview -->
+          <div id="expiry-preview-banner" style="display: none;">
+            <!-- Calculated dynamically in script.js -->
+          </div>
+
+          <div class="form-group">
+            <label for="prod-notes">Notes / Support Details</label>
+            <div class="input-wrapper">
+              <textarea id="prod-notes" class="input-control" placeholder="Add receipt number, serial numbers, support contacts or claims notes..." style="height: 80px; resize: none; padding-left: 1rem;"></textarea>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Product</button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span style="font-weight: 700; color: var(--text-primary);">WarrantyHUB</span>
+        <span>WarrantyHUB - Smart Warranty Tracking System</span>
+      </div>
+      <div class="footer-links">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="products.html">Products</a>
+        <a href="profile.html">Settings</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script JS -->
+  <script src="js/script.js"></script>
+</body>
+</html>
